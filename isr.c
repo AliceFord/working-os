@@ -2,10 +2,62 @@
 #include "drivers/display.h"
 #include "idt.h"
 #include "ports.h"
+#include "cstd.h"
 
 void isr_handler(registers_t *r) {
+    char buffers[16][9];
+    uint32toa(r->ds, buffers[0]);
+    uint32toa(r->edi, buffers[1]);
+    uint32toa(r->esi, buffers[2]);
+    uint32toa(r->ebp, buffers[3]);
+    uint32toa(r->esp, buffers[4]);
+    uint32toa(r->ebx, buffers[5]);
+    uint32toa(r->edx, buffers[6]);
+    uint32toa(r->ecx, buffers[7]);
+    uint32toa(r->eax, buffers[8]);
+    uint32toa(r->int_no, buffers[9]);
+    uint32toa(r->err_code, buffers[10]);
+    uint32toa(r->eip, buffers[11]);
+    uint32toa(r->cs, buffers[12]);
+    uint32toa(r->eflags, buffers[13]);
+    uint32toa(r->useresp, buffers[14]);
+    uint32toa(r->ss, buffers[15]);
+    print_string("\n\n----ERROR!----\nMessage: ");
     print_string(exception_messages[r->int_no]);
+    print_string("\nDS: ");
+    print_string(buffers[0]);
+    print_string("\nEDI: ");
+    print_string(buffers[1]);
+    print_string(" ESI: ");
+    print_string(buffers[2]);
+    print_string(" EBP: ");
+    print_string(buffers[3]);
+    print_string(" ESP: ");
+    print_string(buffers[4]);
+    print_string("\nEAX: ");
+    print_string(buffers[8]);
+    print_string(" EBX: ");
+    print_string(buffers[5]);
+    print_string(" ECX: ");
+    print_string(buffers[7]);
+    print_string(" EDX: ");
+    print_string(buffers[6]);
+    print_string("\nINT_NO: ");
+    print_string(buffers[9]);
+    print_string("\nError Code: ");
+    print_string(buffers[10]);
+    print_string("\nEIP: ");
+    print_string(buffers[11]);
+    print_string(" CS: ");
+    print_string(buffers[12]);
+    print_string(" EFLAGS: ");
+    print_string(buffers[13]);
+    print_string(" USERESP: ");
+    print_string(buffers[14]);
+    print_string(" SS: ");
+    print_string(buffers[15]);
     print_string("\n");
+    __asm__("hlt");
 }
 
 void isr_install() {

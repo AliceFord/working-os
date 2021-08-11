@@ -2,6 +2,7 @@
     "files.associations": {
         "\"*.html\"": "\"jinja-html\"",
         "util.h": "c",
-        "display.h": "c"
+        "display.h": "c",
+        "type.h": "c"
     }
 }

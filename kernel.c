@@ -1,6 +1,7 @@
 #include "drivers/display.h"
 #include "drivers/keyboard.h"
 #include "isr.h"
+#include <stdint.h>
 //#include "idt.h"
 
 void kernel_main() {

@@ -15,6 +15,9 @@ idt.o \
 irq.o \
 isr.o \
 isr-handler.o \
+cstd.o \
+command.o \
+switch-to-16bit.o \
 
 #CC = gcc
 #LD = ld
@@ -29,6 +32,9 @@ kernel-entry.o: kernel-entry.asm
 	nasm $< -felf -o $@
 
 isr-handler.o: isr-handler.asm
+	nasm $< -felf -o $@
+
+switch-to-16bit.o: switch-to-16bit.asm
 	nasm $< -felf -o $@
 
 .c.o:

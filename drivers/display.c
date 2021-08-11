@@ -3,8 +3,7 @@
 #include "../util.h"
 #include "keyboard.h"
 #include "display.h"
-
-extern int commandLength;
+#include "../cstd.h"
 
 void set_cursor(int offset) {
     offset /= 2;
@@ -84,12 +83,13 @@ void clear_screen() {
     set_cursor(get_offset(0, 0));
 }
 
-void backspace() {
-    if (commandLength > 0) {
+void backspace(char buffer[]) {
+    int length = strlen(buffer);
+    if (length > 0) {
         int offset = get_cursor();
         offset -= 2;
         set_char_at_video_memory(' ', offset);
         set_cursor(offset);
-        commandLength--;
+        buffer[length - 1] = '\0';
     }
 }

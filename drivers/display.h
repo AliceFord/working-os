@@ -12,6 +12,6 @@ int scroll_ln(int offset);
 void set_char_at_video_memory(char character, int offset);
 void print_string(char *string);
 void clear_screen();
-void backspace();
+void backspace(char buffer[]);
 
 #endif
