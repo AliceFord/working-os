@@ -3,7 +3,10 @@
 #include "drivers/display.h"
 
 void gameoflife() {
-    Entry16();
+    // unsigned char *pixel = (unsigned char *)0xa0000;    
+    // for (int i = 0; i < 1000; i++) {
+    //     *(pixel + i) = 128;
+    // }
 }
 
 void execute(char buffer[]) {

@@ -17,7 +17,7 @@ isr.o \
 isr-handler.o \
 cstd.o \
 command.o \
-switch-to-16bit.o \
+#switch-to-16bit.o \
 
 #CC = gcc
 #LD = ld
