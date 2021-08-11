@@ -1,0 +1,4 @@
+ata0-master: type=disk, path="os-image.bin", mode=flat, cylinders=10, heads=10, spt=10
+boot: disk
+display_library: sdl
+megs: 128
