@@ -1,12 +1,14 @@
 #include "command.h"
 #include "cstd.h"
 #include "drivers/display.h"
+#include "type.h"
+#include "ports.h"
 
 void gameoflife() {
-    // unsigned char *pixel = (unsigned char *)0xa0000;    
-    // for (int i = 0; i < 1000; i++) {
-    //     *(pixel + i) = 128;
-    // }
+    unsigned char *pixel = (unsigned char *)VIDEO_ADDRESS; 
+    for (int i = 0; i < 1000; i++) {
+        *(pixel + i) = 0xff;
+    }
 }
 
 void execute(char buffer[]) {

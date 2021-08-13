@@ -9,6 +9,18 @@ mov [BOOT_DRIVE], dl
 mov bp, 0x9000
 mov sp, bp
 
+; Set VGA mode
+
+; mov ah, 0x4f
+; mov al, 0x02
+; mov bh, 0x115 ; 0x13 -> 40 x 25
+; int 0x10
+
+mov ax, 0x4f02
+mov bx, 0x4112
+int 0x10
+
+; 80 x 30 text mode essentially
 call load_kernel
 
 call switch_to_32bit
@@ -22,7 +34,7 @@ jmp $ ; loop forever
 [bits 16]
 load_kernel:
     mov bx, KERNEL_OFFSET ; destination
-    mov dh, 32 ; num sectors
+    mov dh, 48 ; num sectors
     mov dl, [BOOT_DRIVE] ; disk
     call disk_load
     ret

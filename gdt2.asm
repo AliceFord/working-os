@@ -20,7 +20,7 @@ gdt2_data:
 gdt2_end:
 
 gdt2_descriptor:
-    dw gdt2_end - gdt2_start - 1
+    dw gdt2_end - gdt2_start
     dd gdt2_start
 
 CODE_SEG2 equ gdt2_code - gdt2_start

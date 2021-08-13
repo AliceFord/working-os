@@ -5,28 +5,36 @@
 #include "display.h"
 #include "../cstd.h"
 
+void enable_cursor(uint8_t cursor_start, uint8_t cursor_end) {
+	out(0x3D4, 0x0A);
+	out(0x3D5, (in(0x3D5) & 0xC0) | cursor_start);
+ 
+	out(0x3D4, 0x0B);
+	out(0x3D5, (in(0x3D5) & 0xE0) | cursor_end);
+}
+
 void set_cursor(int offset) {
-    offset /= 2;
-    out(VGA_CTRL_REGISTER, VGA_OFFSET_HIGH);
-    out(VGA_DATA_REGISTER, (unsigned char) (offset >> 8));
-    out(VGA_CTRL_REGISTER, VGA_OFFSET_LOW);
-    out(VGA_DATA_REGISTER, (unsigned char) (offset & 0xff));
+    curOffset = offset;
+    // out(VGA_CTRL_REGISTER, VGA_OFFSET_HIGH);
+    // out(VGA_DATA_REGISTER, (unsigned char) (offset >> 8));
+    // out(VGA_CTRL_REGISTER, VGA_OFFSET_LOW);
+    // out(VGA_DATA_REGISTER, (unsigned char) (offset & 0xff));
 }
 
 int get_cursor() {
-    out(VGA_CTRL_REGISTER, VGA_OFFSET_HIGH);
-    int offset = in(VGA_DATA_REGISTER) << 8;
-    out(VGA_CTRL_REGISTER, VGA_OFFSET_LOW);
-    offset += in(VGA_DATA_REGISTER);
-    return offset * 2;
+    return curOffset;
+    // out(VGA_CTRL_REGISTER, VGA_OFFSET_HIGH);
+    // int offset = in(VGA_DATA_REGISTER) << 8;
+    // out(VGA_CTRL_REGISTER, VGA_OFFSET_LOW);
+    // offset += in(VGA_DATA_REGISTER);
 }
 
 int get_row_from_offset(int offset) {
-    return offset / (2 * MAX_COLS);
+    return offset / MAX_COLS;
 }
 
 int get_offset(int col, int row) {
-    return 2 * (row * MAX_COLS + col);
+    return row * MAX_COLS + col;
 }
 
 int move_offset_to_new_line(int offset) {
@@ -44,16 +52,43 @@ int scroll_ln(int offset) {
         set_char_at_video_memory(' ', get_offset(col, MAX_ROWS - 1));
     }
     
-    return offset - 2 * MAX_COLS;
+    return offset - MAX_COLS;
 }
 
-void set_char_at_video_memory(char character, int offset) {
-    unsigned char *vidmem = (unsigned char *) VIDEO_ADDRESS;
-    vidmem[offset] = character;
-    vidmem[offset + 1] = WHITE_ON_BLACK;
+void set_char_at_video_memory(unsigned char character, int offset) {
+    unsigned char *vidmem = (unsigned char *)VIDEO_ADDRESS;
+    // vidmem[offset] = character;
+    // vidmem[offset + 1] = WHITE_ON_BLACK;
+
+    // for (int i = 0; i < 640 * 3; i++) 
+    //     *(vidmem + i) = 0xff;
+    
+    // for (int i = 0; i < 1280 * 3; i++) 
+    //     *(vidmem + i + 1280 * 3 * 2) = 0xff;
+
+    int row = offset / MAX_COLS;
+    int col = offset % MAX_COLS;
+    int pos;
+    row *= 16;
+    col *= 8;
+    for (int i = 0; i < 16; i++) {
+        for (int j = 0; j < 8; j++) {
+            pos = (row + i) * PIXEL_COLS + col + j;
+            unsigned char charRow = defaultFont[character][i];
+            if ((charRow >> (8 - j - 1)) & 0b1 == 0b1) {
+                for (int bt = 0; bt < BYTES_PER_COLOUR; bt++)
+                    vidmem[pos * BYTES_PER_COLOUR + bt] = 0xff;
+            } else {
+                for (int bt = 0; bt < BYTES_PER_COLOUR; bt++)
+                    vidmem[pos * BYTES_PER_COLOUR + bt] = 0x0;
+            }
+        }
+    }
+    // for (int i = 0; i < 320; i++) 
+    //     *(vidmem + i) = 0xaa;
 }
 
-void print_string(char *string) {
+void print_string(unsigned char *string) {
     int i = 0;
     int offset = get_cursor();
     while (string[i] != 0) {
@@ -68,7 +103,7 @@ void print_string(char *string) {
         
         default:
             set_char_at_video_memory(string[i], offset);
-            offset += 2;
+            offset++;
             break;
         }
         i++;
@@ -87,7 +122,7 @@ void backspace(char buffer[]) {
     int length = strlen(buffer);
     if (length > 0) {
         int offset = get_cursor();
-        offset -= 2;
+        offset--;
         set_char_at_video_memory(' ', offset);
         set_cursor(offset);
         buffer[length - 1] = '\0';

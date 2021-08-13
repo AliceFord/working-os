@@ -75,7 +75,7 @@ irq_common_stub:
 
 
 isr_noret 0
-isr_noret 1
+;isr_noret 1
 isr_noret 2
 isr_noret 3
 isr_noret 4

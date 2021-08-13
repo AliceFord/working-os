@@ -62,7 +62,7 @@ void isr_handler(registers_t *r) {
 
 void isr_install() {
     set_idt_gate(0, (uint32_t)isr0);
-    set_idt_gate(1, (uint32_t)isr1);
+    //set_idt_gate(1, (uint32_t)isr1);
     set_idt_gate(2, (uint32_t)isr2);
     set_idt_gate(3, (uint32_t)isr3);
     set_idt_gate(4, (uint32_t)isr4);

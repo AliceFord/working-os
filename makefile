@@ -17,6 +17,7 @@ isr.o \
 isr-handler.o \
 cstd.o \
 command.o \
+#drivers/IBM-VGA.o \
 #switch-to-16bit.o \
 
 #CC = gcc
